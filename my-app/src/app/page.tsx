@@ -10,7 +10,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Loader2Icon, RefreshCwIcon, ClockIcon } from "lucide-react";
-
+import { toast } from "sonner";
 // Dynamically import Map to avoid SSR issues
 const Map = dynamic(() => import("@/components/Map"), { ssr: false });
 
@@ -38,9 +38,13 @@ export default function Home() {
     setLastUpdated(new Date());
   }, []);
 
-  const handleError = useCallback(() => {
+  const handleError = useCallback((err?: any) => {
     setLoading(false);
-    // Optionally show an error toast
+    if (err?.status === 429) {
+      toast("Too many requests. Please wait a minute before trying again.");
+    } else {
+      toast("Failed to load radar image. Please try again.");
+    }
   }, []);
 
   const formatTimestamp = (date: Date) => {

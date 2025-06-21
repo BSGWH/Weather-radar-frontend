@@ -19,7 +19,7 @@ function RadarOverlay({
   imageUrl: string;
   bounds: [[number, number], [number, number]];
   onLoad: () => void;
-  onError: () => void;
+  onError: (error?: any) => void;
 }) {
   const map = useMap();
   const overlayRef = useRef<L.ImageOverlay | null>(null);
@@ -33,9 +33,23 @@ function RadarOverlay({
       onLoad();
     };
 
-    img.onerror = () => {
-      console.error("Failed to load radar image");
-      onError();
+    img.onerror = async () => {
+      // console.error("Failed to load radar image");
+
+      // Try to fetch to get the actual error response
+      try {
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+          const errorData = await response
+            .json()
+            .catch(() => ({ detail: "Failed to load radar image" }));
+          onError({ status: response.status, message: errorData.detail });
+        } else {
+          onError({ message: "Failed to load image" });
+        }
+      } catch (err) {
+        onError({ message: "Network error" });
+      }
     };
 
     // Start loading the image
@@ -56,8 +70,8 @@ function RadarOverlay({
 export default function Map({ refreshKey, onLoad, onError }: MapProps) {
   // CONUS bounds [southWest, northEast]
   const bounds: [[number, number], [number, number]] = [
-    [24.396308, -124.848974],
-    [49.384358, -66.885444],
+    [20.005001, -129.995],
+    [54.995, -60.005002],
   ];
 
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/radar/radar.png?ts=${refreshKey}`;
