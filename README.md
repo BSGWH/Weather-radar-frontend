@@ -1,4 +1,4 @@
-# Weather Radar Visualization
+# Weather Radar UI
 
 A real-time weather radar visualization application frontend built with Next.js and Leaflet. This application displays CONUS (Continental United States) weather radar data powered by MRMS NOAA.
 
