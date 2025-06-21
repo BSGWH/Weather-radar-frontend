@@ -2,7 +2,13 @@
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Loader2Icon, RefreshCwIcon, ClockIcon } from "lucide-react";
 
 // Dynamically import Map to avoid SSR issues
@@ -84,6 +90,20 @@ export default function Home() {
             />
           </div>
         </CardContent>
+        <CardFooter className="flex items-center justify-between text-sm text-muted-foreground">
+          <div>
+            Powered by{" "}
+            <a
+              href="https://mrms.ncep.noaa.gov/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-foreground transition-colors"
+            >
+              MRMS NOAA
+            </a>
+          </div>
+          <div>Created by Weihao</div>
+        </CardFooter>
       </Card>
     </div>
   );
