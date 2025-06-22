@@ -2,6 +2,8 @@
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
@@ -27,6 +29,7 @@ export default function Home() {
   const [refreshKey, setRefreshKey] = useState(Date.now());
   const [loading, setLoading] = useState(true); // Start with loading true
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [opacity, setOpacity] = useState(1);
 
   const handleRefresh = () => {
     setLoading(true);
@@ -46,6 +49,10 @@ export default function Home() {
       toast("Failed to load radar image. Please try again.");
     }
   }, []);
+
+  const handleOpacityChange = (value: number[]) => {
+    setOpacity(value[0]);
+  };
 
   const formatTimestamp = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
@@ -86,12 +93,34 @@ export default function Home() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[600px] w-full">
-            <Map
-              refreshKey={refreshKey}
-              onLoad={handleLoad}
-              onError={handleError}
-            />
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Label htmlFor="opacity-slider" className="min-w-[80px]">
+                Opacity:
+              </Label>
+              <div className="flex items-center gap-3 w-64">
+                <Slider
+                  id="opacity-slider"
+                  min={0}
+                  max={1}
+                  step={0.01}
+                  value={[opacity]}
+                  onValueChange={handleOpacityChange}
+                  className="flex-1"
+                />
+              </div>
+              <span className="min-w-[40px] text-sm text-muted-foreground">
+                {Math.round(opacity * 100)}%
+              </span>
+            </div>
+            <div className="h-[600px] w-full">
+              <Map
+                refreshKey={refreshKey}
+                opacity={opacity}
+                onLoad={handleLoad}
+                onError={handleError}
+              />
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex items-center justify-between text-sm text-muted-foreground">

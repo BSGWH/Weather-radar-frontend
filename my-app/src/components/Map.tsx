@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 
 interface MapProps {
   refreshKey: number;
+  opacity: number;
   onLoad: () => void;
   onError: () => void;
 }
@@ -13,11 +14,13 @@ interface MapProps {
 function RadarOverlay({
   imageUrl,
   bounds,
+  opacity,
   onLoad,
   onError,
 }: {
   imageUrl: string;
   bounds: [[number, number], [number, number]];
+  opacity: number;
   onLoad: () => void;
   onError: (error?: any) => void;
 }) {
@@ -63,11 +66,21 @@ function RadarOverlay({
   }, [imageUrl, onLoad, onError]);
 
   return (
-    <ImageOverlay ref={overlayRef} url={imageUrl} bounds={bounds} opacity={1} />
+    <ImageOverlay
+      ref={overlayRef}
+      url={imageUrl}
+      bounds={bounds}
+      opacity={opacity}
+    />
   );
 }
 
-export default function Map({ refreshKey, onLoad, onError }: MapProps) {
+export default function Map({
+  refreshKey,
+  opacity,
+  onLoad,
+  onError,
+}: MapProps) {
   // CONUS bounds [southWest, northEast]
   const bounds: [[number, number], [number, number]] = [
     [20.005001, -129.995],
@@ -91,6 +104,7 @@ export default function Map({ refreshKey, onLoad, onError }: MapProps) {
       <RadarOverlay
         imageUrl={imageUrl}
         bounds={bounds}
+        opacity={opacity}
         onLoad={onLoad}
         onError={onError}
       />
